@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import 'no_keyboard_editable_text.dart';
 
 void main() {
     runApp(
@@ -9,6 +10,7 @@ void main() {
                     title: Text("Simple Calculator"),
                 ),
                 body: SimpleCalculator(),
+                resizeToAvoidBottomPadding: false,
             ),
             theme: ThemeData(
                 brightness: Brightness.light
@@ -23,8 +25,11 @@ class SimpleCalculator extends StatefulWidget {
 }
 
 class _SimpleCalculatorState extends State<SimpleCalculator> {
-    String history = "72 x 9";
-    String screen = "93243";
+    String history = "";
+    String screen = "";
+
+    var screenTextController = TextEditingController();
+
     var numberButtonStyle = TextStyle(
         fontSize: 20.0,
         fontWeight: FontWeight.w600
@@ -33,7 +38,8 @@ class _SimpleCalculatorState extends State<SimpleCalculator> {
         fontSize: 25.0
     );
     var screenStyle = TextStyle(
-        fontSize: 40.0
+        fontSize: 45.0,
+        color: Colors.black
     );
     var historyStyle = TextStyle(
         fontSize: 16.0
@@ -54,11 +60,11 @@ class _SimpleCalculatorState extends State<SimpleCalculator> {
                                 style: historyStyle,
                                 textAlign: TextAlign.right,
                             ),
-                            Padding(
-                                padding: EdgeInsets.only(top: 10.0),
-                                child: Text(
-                                    screen,
+                            Expanded(
+                                child: NoKeyboardEditableText(
+                                    controller: screenTextController,
                                     style: screenStyle,
+                                    cursorColor: Colors.blueAccent,
                                     textAlign: TextAlign.right,
                                 )
                             )
@@ -108,7 +114,8 @@ class _SimpleCalculatorState extends State<SimpleCalculator> {
                             ),
                             Expanded(
                                 child: OutlineButton (
-                                    child: Icon(Icons.backspace)
+                                    child: Icon(Icons.backspace),
+                                    onPressed: () => backSpaceClicked(),
                                 ),
                             ),
                             Expanded(
@@ -125,17 +132,20 @@ class _SimpleCalculatorState extends State<SimpleCalculator> {
                         children: <Widget>[
                             Expanded(
                                 child: OutlineButton (
-                                    child: Text("7", style: numberButtonStyle)
+                                    child: Text("7", style: numberButtonStyle),
+                                    onPressed: () => numberClicked("7"),
                                 ),
                             ),
                             Expanded(
                                 child: OutlineButton (
-                                    child: Text("8", style: numberButtonStyle)
+                                    child: Text("8", style: numberButtonStyle),
+                                    onPressed: () => numberClicked("8"),
                                 ),
                             ),
                             Expanded(
                                 child: OutlineButton (
-                                    child: Text("9", style: numberButtonStyle)
+                                    child: Text("9", style: numberButtonStyle),
+                                    onPressed: () => numberClicked("9"),
                                 ),
                             ),
                             Expanded(
@@ -152,17 +162,20 @@ class _SimpleCalculatorState extends State<SimpleCalculator> {
                         children: <Widget>[
                             Expanded(
                                 child: OutlineButton (
-                                    child: Text("4", style: numberButtonStyle)
+                                    child: Text("4", style: numberButtonStyle),
+                                    onPressed: () => numberClicked("4"),
                                 ),
                             ),
                             Expanded(
                                 child: OutlineButton (
-                                    child: Text("5", style: numberButtonStyle)
+                                    child: Text("5", style: numberButtonStyle),
+                                    onPressed: () => numberClicked("5"),
                                 ),
                             ),
                             Expanded(
                                 child: OutlineButton (
-                                    child: Text("6", style: numberButtonStyle)
+                                    child: Text("6", style: numberButtonStyle),
+                                    onPressed: () => numberClicked("6"),
                                 ),
                             ),
                             Expanded(
@@ -179,17 +192,20 @@ class _SimpleCalculatorState extends State<SimpleCalculator> {
                         children: <Widget>[
                             Expanded(
                                 child: OutlineButton (
-                                    child: Text("1", style: numberButtonStyle)
+                                    child: Text("1", style: numberButtonStyle),
+                                    onPressed: () => numberClicked("1"),
                                 ),
                             ),
                             Expanded(
                                 child: OutlineButton (
-                                    child: Text("2", style: numberButtonStyle)
+                                    child: Text("2", style: numberButtonStyle),
+                                    onPressed: () => numberClicked("2"),
                                 ),
                             ),
                             Expanded(
                                 child: OutlineButton (
-                                    child: Text("3", style: numberButtonStyle)
+                                    child: Text("3", style: numberButtonStyle),
+                                    onPressed: () => numberClicked("3"),
                                 ),
                             ),
                             Expanded(
@@ -211,7 +227,8 @@ class _SimpleCalculatorState extends State<SimpleCalculator> {
                             ),
                             Expanded(
                                 child: OutlineButton (
-                                    child: Text("0", style: numberButtonStyle)
+                                    child: Text("0", style: numberButtonStyle),
+                                    onPressed: () => numberClicked("0"),
                                 ),
                             ),
                             Expanded(
@@ -230,4 +247,51 @@ class _SimpleCalculatorState extends State<SimpleCalculator> {
             ],
         );
     }
+
+    void numberClicked(String number) {
+        var insertPosition = screenTextController.selection.start;
+        if (insertPosition == -1) {
+            setState(() {
+                screenTextController.text += number.toString();
+            });
+        }
+        else {
+            var currentTextList = screenTextController.text.split('').toList();
+            currentTextList.insert(insertPosition, number);
+            setState(() {
+                screenTextController.text = currentTextList.join('');
+                screenTextController.selection = TextSelection.fromPosition(
+                    TextPosition(offset: insertPosition + 1)
+                );
+            });
+        }
+    }
+
+    void backSpaceClicked() {
+        if (screenTextController.text.length > 0) {
+            var deletePosition = screenTextController.selection.start;
+
+            if (deletePosition == -1) {
+                var currentText = screenTextController.text;
+                setState(() {
+                    screenTextController.text = currentText.substring(0, currentText.length - 1);
+                });
+            }
+            else {
+                var currentTextList = screenTextController.text.split('').toList();
+                currentTextList.removeAt(deletePosition - 1);
+                setState(() {
+                    screenTextController.text = currentTextList.join('');
+                    screenTextController.selection = TextSelection.fromPosition(
+                        TextPosition(offset: deletePosition - 1)
+                    );
+                });
+            }
+        }
+    }
+}
+
+class AlwaysDisabledFocusNode extends FocusNode {
+    @override
+    bool get hasFocus => false;
 }
