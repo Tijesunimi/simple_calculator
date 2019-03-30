@@ -10,6 +10,9 @@ void main() {
                 ),
                 body: SimpleCalculator(),
             ),
+            theme: ThemeData(
+                brightness: Brightness.light
+            ),
         )
     );
 }
@@ -22,8 +25,12 @@ class SimpleCalculator extends StatefulWidget {
 class _SimpleCalculatorState extends State<SimpleCalculator> {
     String history = "72 x 9";
     String screen = "93243";
-    var buttonStyle = TextStyle(
-        fontSize: 19.0
+    var numberButtonStyle = TextStyle(
+        fontSize: 20.0,
+        fontWeight: FontWeight.w600
+    );
+    var signButtonStyle = TextStyle(
+        fontSize: 25.0
     );
     var screenStyle = TextStyle(
         fontSize: 40.0
@@ -37,6 +44,7 @@ class _SimpleCalculatorState extends State<SimpleCalculator> {
         return Column (
             children: <Widget>[
                 Container(
+                    height: 140.0,
                     padding: EdgeInsets.all(20.0),
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -59,25 +67,53 @@ class _SimpleCalculatorState extends State<SimpleCalculator> {
                 ),
                 Expanded(
                     child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: <Widget>[
                             Expanded(
-                                child: FlatButton (
-                                    child: Text("CE", style: buttonStyle),
+                                child: OutlineButton (
+                                    child: Text("^", style: signButtonStyle)
                                 ),
                             ),
                             Expanded(
-                                child: FlatButton (
-                                    child: Text("C", style: buttonStyle)
+                                child: OutlineButton (
+                                    child: Text("√", style: signButtonStyle)
                                 ),
                             ),
                             Expanded(
-                                child: FlatButton (
+                                child: OutlineButton (
+                                    child: Text("(", style: signButtonStyle)
+                                ),
+                            ),
+                            Expanded(
+                                child: OutlineButton (
+                                    child: Text(")", style: signButtonStyle)
+                                ),
+                            )
+                        ],
+                    )
+                ),
+                Expanded(
+                    child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: <Widget>[
+                            Expanded(
+                                child: OutlineButton (
+                                    child: Text("CE", style: numberButtonStyle)
+                                ),
+                            ),
+                            Expanded(
+                                child: OutlineButton (
+                                    child: Text("C", style: numberButtonStyle)
+                                ),
+                            ),
+                            Expanded(
+                                child: OutlineButton (
                                     child: Icon(Icons.backspace)
                                 ),
                             ),
                             Expanded(
-                                child: FlatButton (
-                                    child: Text("/", style: buttonStyle)
+                                child: OutlineButton (
+                                    child: Text("÷", style: signButtonStyle)
                                 ),
                             )
                         ],
@@ -85,25 +121,26 @@ class _SimpleCalculatorState extends State<SimpleCalculator> {
                 ),
                 Expanded(
                     child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: <Widget>[
                             Expanded(
-                                child: FlatButton (
-                                    child: Text("7", style: buttonStyle)
+                                child: OutlineButton (
+                                    child: Text("7", style: numberButtonStyle)
                                 ),
                             ),
                             Expanded(
-                                child: FlatButton (
-                                    child: Text("8", style: buttonStyle)
+                                child: OutlineButton (
+                                    child: Text("8", style: numberButtonStyle)
                                 ),
                             ),
                             Expanded(
-                                child: FlatButton (
-                                    child: Text("9", style: buttonStyle)
+                                child: OutlineButton (
+                                    child: Text("9", style: numberButtonStyle)
                                 ),
                             ),
                             Expanded(
-                                child: FlatButton (
-                                    child: Text("x", style: buttonStyle)
+                                child: OutlineButton (
+                                    child: Text("×", style: signButtonStyle)
                                 ),
                             )
                         ],
@@ -111,25 +148,26 @@ class _SimpleCalculatorState extends State<SimpleCalculator> {
                 ),
                 Expanded(
                     child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: <Widget>[
                             Expanded(
-                                child: FlatButton (
-                                    child: Text("4", style: buttonStyle)
+                                child: OutlineButton (
+                                    child: Text("4", style: numberButtonStyle)
                                 ),
                             ),
                             Expanded(
-                                child: FlatButton (
-                                    child: Text("5", style: buttonStyle)
+                                child: OutlineButton (
+                                    child: Text("5", style: numberButtonStyle)
                                 ),
                             ),
                             Expanded(
-                                child: FlatButton (
-                                    child: Text("6", style: buttonStyle)
+                                child: OutlineButton (
+                                    child: Text("6", style: numberButtonStyle)
                                 ),
                             ),
                             Expanded(
-                                child: FlatButton (
-                                    child: Text(".", style: buttonStyle)
+                                child: OutlineButton (
+                                    child: Text("−", style: signButtonStyle)
                                 ),
                             )
                         ],
@@ -137,25 +175,26 @@ class _SimpleCalculatorState extends State<SimpleCalculator> {
                 ),
                 Expanded(
                     child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: <Widget>[
                             Expanded(
-                                child: FlatButton (
-                                    child: Text("1", style: buttonStyle)
+                                child: OutlineButton (
+                                    child: Text("1", style: numberButtonStyle)
                                 ),
                             ),
                             Expanded(
-                                child: FlatButton (
-                                    child: Text("2", style: buttonStyle)
+                                child: OutlineButton (
+                                    child: Text("2", style: numberButtonStyle)
                                 ),
                             ),
                             Expanded(
-                                child: FlatButton (
-                                    child: Text("3", style: buttonStyle)
+                                child: OutlineButton (
+                                    child: Text("3", style: numberButtonStyle)
                                 ),
                             ),
                             Expanded(
-                                child: FlatButton (
-                                    child: Text("+", style: buttonStyle)
+                                child: OutlineButton (
+                                    child: Text("+", style: signButtonStyle)
                                 ),
                             )
                         ],
@@ -163,25 +202,26 @@ class _SimpleCalculatorState extends State<SimpleCalculator> {
                 ),
                 Expanded(
                     child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: <Widget>[
                             Expanded(
-                                child: FlatButton (
-                                    child: Text("_", style: buttonStyle)
+                                child: OutlineButton (
+                                    child: Text("±", style: signButtonStyle)
                                 ),
                             ),
                             Expanded(
-                                child: FlatButton (
-                                    child: Text("0", style: buttonStyle)
+                                child: OutlineButton (
+                                    child: Text("0", style: numberButtonStyle)
                                 ),
                             ),
                             Expanded(
-                                child: FlatButton (
-                                    child: Text(".", style: buttonStyle)
+                                child: OutlineButton (
+                                    child: Text(".", style: signButtonStyle)
                                 ),
                             ),
                             Expanded(
-                                child: FlatButton (
-                                    child: Text("=", style: buttonStyle)
+                                child: OutlineButton (
+                                    child: Text("=", style: signButtonStyle)
                                 ),
                             )
                         ],
