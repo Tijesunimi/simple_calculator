@@ -14,7 +14,8 @@ class NoKeyboardEditableText extends EditableText {
         @required Color cursorColor,
         bool autofocus = false,
         Color selectionColor,
-        TextAlign textAlign
+        TextAlign textAlign,
+        FocusNode focusNode
     }):super(
         controller: controller,
         focusNode: NoKeyboardEditableTextFocusNode(),
@@ -30,7 +31,6 @@ class NoKeyboardEditableText extends EditableText {
     EditableTextState createState() {
         return NoKeyboardEditableTextState();
     }
-
 }
 
 class NoKeyboardEditableTextState extends EditableTextState {
