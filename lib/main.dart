@@ -276,7 +276,8 @@ class _SimpleCalculatorState extends State<SimpleCalculator> {
                             ),
                             Expanded(
                                 child: OutlineButton (
-                                    child: Text("=", style: signButtonStyle)
+                                    child: Text("=", style: signButtonStyle),
+                                    onPressed: () => equalSignClicked(),
                                 ),
                             )
                         ],
@@ -291,19 +292,37 @@ class _SimpleCalculatorState extends State<SimpleCalculator> {
             case "CE":
                 setState(() {
                     screenTextController.text = "";
+                    if (history == "") {
+                        previousTotal = null;
+                        currentSign = Sign.None;
+                    }
                 });
                 break;
             case "C":
                 setState(() {
                     screenTextController.text = "";
                     history = "";
+                    previousTotal = null;
+                    currentSign = Sign.None;
                 });
                 break;
         }
     }
 
+
+    void equalSignClicked() {
+        double currentNumber = double.parse(screenTextController.text);
+        setState(() {
+            previousTotal = getCurrentResult(currentNumber);
+            screenTextController.text = previousTotal.toString();
+            history = "";
+            isScreenPreviousTotal = true;
+            currentSign = Sign.None;
+        });
+    }
+
     void signClicked(String signText) {
-        if (currentSign != Sign.None && screenTextController.text == "") {
+        if (currentSign != Sign.None && (isScreenPreviousTotal || screenTextController.text == "")) {
             setState(() {
                 history = history.substring(0, history.length - 3);
                 history += " $signText ";
