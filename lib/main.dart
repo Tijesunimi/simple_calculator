@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import 'no_keyboard_editable_text.dart';
+import 'dart:math';
 
 void main() {
     runApp(
@@ -33,6 +34,9 @@ class _SimpleCalculatorState extends State<SimpleCalculator> {
     double previousTotal;
     Sign currentSign;
     bool isScreenPreviousTotal;
+    bool isScreenSquareRoot;
+    bool isRaiseToPower;
+    double raiseToPowerNumber;
 
     @override
     void initState() {
@@ -43,6 +47,8 @@ class _SimpleCalculatorState extends State<SimpleCalculator> {
         screenTextController = new TextEditingController();
         currentSign = Sign.None;
         isScreenPreviousTotal = false;
+        isScreenSquareRoot = false;
+        isRaiseToPower = false;
         numberButtonStyle = TextStyle(
             fontSize: 20.0,
             fontWeight: FontWeight.w600
@@ -91,12 +97,14 @@ class _SimpleCalculatorState extends State<SimpleCalculator> {
                         children: <Widget>[
                             Expanded(
                                 child: OutlineButton (
-                                    child: Text("^", style: signButtonStyle)
+                                    child: Text("^", style: signButtonStyle),
+                                    onPressed:  () => raiseToPowerClicked(),
                                 ),
                             ),
                             Expanded(
                                 child: OutlineButton (
-                                    child: Text("√", style: signButtonStyle)
+                                    child: Text("√", style: signButtonStyle),
+                                    onPressed: () => squareRootClicked(),
                                 ),
                             ),
                             Expanded(
@@ -309,7 +317,6 @@ class _SimpleCalculatorState extends State<SimpleCalculator> {
         }
     }
 
-
     void equalSignClicked() {
         double currentNumber = double.parse(screenTextController.text);
         setState(() {
@@ -321,31 +328,89 @@ class _SimpleCalculatorState extends State<SimpleCalculator> {
         });
     }
 
-    void signClicked(String signText) {
-        if (currentSign != Sign.None && (isScreenPreviousTotal || screenTextController.text == "")) {
+    void squareRootClicked() {
+        if (screenTextController.text != "") {
+            double currentNumber = double.parse(screenTextController.text);
+            
             setState(() {
+                history += " √${screenTextController.text}";
+                previousTotal = getCurrentResult(sqrt(currentNumber), isSquareRoot: true);
+                screenTextController.text = previousTotal.toString();
+                currentSign = Sign.None;
+                isScreenSquareRoot = true;
+                isScreenPreviousTotal = true;
+            });
+        }
+    }
+
+    void raiseToPowerClicked() {
+        if (screenTextController.text != "") {
+            setState(() {
+                if (!isRaiseToPower)
+                    history += "${screenTextController.text} ^ ";
+                else
+                    history += " ^ ";
+                isRaiseToPower = true;
+                isScreenPreviousTotal = true;
+                raiseToPowerNumber = double.parse(screenTextController.text);
+            });
+        }
+        else {
+            if (currentSign != Sign.None) {
+                setState(() {
+                    history = history.substring(0, history.length - 3);
+                    history += " ^ ";
+                    isScreenPreviousTotal = true;
+                    isRaiseToPower = true;
+                    raiseToPowerNumber = previousTotal;
+                });
+            }
+        }
+    }
+
+    void signClicked(String signText) {
+        if ((currentSign != Sign.None || isRaiseToPower) && (isScreenPreviousTotal || screenTextController.text == "")) {
+            setState(() {
+                isRaiseToPower = false;
                 history = history.substring(0, history.length - 3);
                 history += " $signText ";
             });
         }
         else {
-            double currentNumber = double.parse(screenTextController.text);
-            setState(() {
-                history += "${screenTextController.text} $signText ";
-                if (previousTotal == null) {
-                    screenTextController.text = "";
-                    previousTotal = currentNumber;
-                }
-                else {
-                    previousTotal = getCurrentResult(currentNumber);
-                    screenTextController.text = previousTotal.toString();
-                    isScreenPreviousTotal = true;
-                }
-            });
+            if (screenTextController.text != "") {
+                double currentNumber = double.parse(screenTextController.text);
+                setState(() {
+                    if (isScreenSquareRoot) {
+                        history += " $signText ";
+                        isScreenSquareRoot = false;
+                    }
+                    else {
+                        history += "${screenTextController.text} $signText ";
+                    }
+
+                    if (previousTotal == null && !isRaiseToPower) {
+                        screenTextController.text = "";
+                        previousTotal = currentNumber;
+                    }
+                    else {
+                        if (isRaiseToPower) {
+                            currentNumber = pow(raiseToPowerNumber, currentNumber);
+                            isRaiseToPower = false;
+                        }
+
+                        previousTotal = getCurrentResult(currentNumber);
+                        screenTextController.text = previousTotal.toString();
+                        isScreenPreviousTotal = true;
+                    }
+                });
+            }
         }
     }
 
-    double getCurrentResult(double currentNumber) {
+    double getCurrentResult(double currentNumber, {bool isSquareRoot = false}) {
+        if (previousTotal == null)
+            return currentNumber;
+
         switch (currentSign) {
             case Sign.Addition:
                 return previousTotal + currentNumber;
@@ -359,7 +424,9 @@ class _SimpleCalculatorState extends State<SimpleCalculator> {
             case Sign.Division:
                 return previousTotal / currentNumber;
             case Sign.None:
-                return previousTotal;
+                return isSquareRoot ? currentNumber : previousTotal;
+            default:
+                return 0.0;
         }
     }
 
@@ -388,8 +455,9 @@ class _SimpleCalculatorState extends State<SimpleCalculator> {
         else {
             var currentTextList = List<String>();
 
-            if (isScreenPreviousTotal)
+            if (isScreenPreviousTotal) {
                 isScreenPreviousTotal = false;
+            }
             else
                 currentTextList = screenTextController.text.split('').toList();
 
@@ -432,5 +500,5 @@ enum Sign {
     Subtraction,
     Division,
     Multiplication,
-    None
+    None,
 }
