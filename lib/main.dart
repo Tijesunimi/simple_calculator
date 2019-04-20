@@ -16,7 +16,8 @@ void main() {
                 resizeToAvoidBottomPadding: false,
             ),
             theme: ThemeData(
-                brightness: Brightness.light
+                brightness: Brightness.light,
+                primaryColor: Colors.deepPurpleAccent
             ),
         )
     );
@@ -30,7 +31,9 @@ class SimpleCalculator extends StatefulWidget {
 class _SimpleCalculatorState extends State<SimpleCalculator> {
     String history, screen;
     TextEditingController screenTextController;
-    TextStyle numberButtonStyle, signButtonStyle, screenStyle, historyStyle;
+    TextStyle numberButtonTextStyle, signButtonTextStyle, screenTextStyle, historyTextStyle;
+    Color signButtonBgColor, numberButtonBgColor;
+    RoundedRectangleBorder buttonBorderShape;
     double previousTotal;
     Sign currentSign;
     bool isScreenPreviousTotal;
@@ -49,18 +52,23 @@ class _SimpleCalculatorState extends State<SimpleCalculator> {
         isScreenPreviousTotal = false;
         isScreenSquareRoot = false;
         isRaiseToPower = false;
-        numberButtonStyle = TextStyle(
+        numberButtonTextStyle = TextStyle(
             fontSize: 20.0,
-            fontWeight: FontWeight.w600
+            fontWeight: FontWeight.w600,
         );
-        signButtonStyle = TextStyle(
-            fontSize: 25.0
+        signButtonTextStyle = TextStyle(
+            fontSize: 25.0,
         );
-        screenStyle = TextStyle(
+        buttonBorderShape = RoundedRectangleBorder(
+            side: BorderSide(color: Color.fromRGBO(216, 216, 216, 1.0))
+        );
+        signButtonBgColor = Colors.amberAccent;
+        numberButtonBgColor = Colors.white;
+        screenTextStyle = TextStyle(
             fontSize: 45.0,
             color: Colors.black
         );
-        historyStyle = TextStyle(
+        historyTextStyle = TextStyle(
             fontSize: 23.0
         );
     }
@@ -77,13 +85,13 @@ class _SimpleCalculatorState extends State<SimpleCalculator> {
                         children: <Widget>[
                             Text(
                                 history,
-                                style: historyStyle,
+                                style: historyTextStyle,
                                 textAlign: TextAlign.right,
                             ),
                             Expanded(
                                 child: NoKeyboardEditableText(
                                     controller: screenTextController,
-                                    style: screenStyle,
+                                    style: screenTextStyle,
                                     cursorColor: Colors.blueAccent,
                                     textAlign: TextAlign.right
                                 )
@@ -96,25 +104,35 @@ class _SimpleCalculatorState extends State<SimpleCalculator> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: <Widget>[
                             Expanded(
-                                child: OutlineButton (
-                                    child: Text("^", style: signButtonStyle),
+                                child: RaisedButton(
+                                    child: Text("^", style: signButtonTextStyle),
                                     onPressed:  () => raiseToPowerClicked(),
+                                    color: signButtonBgColor,
+                                    shape: buttonBorderShape,
                                 ),
                             ),
                             Expanded(
-                                child: OutlineButton (
-                                    child: Text("√", style: signButtonStyle),
+                                child: RaisedButton(
+                                    child: Text("√", style: signButtonTextStyle),
                                     onPressed: () => squareRootClicked(),
+                                    color: signButtonBgColor,
+                                    shape: buttonBorderShape,
                                 ),
                             ),
                             Expanded(
-                                child: OutlineButton (
-                                    child: Text("(", style: signButtonStyle)
+                                child: RaisedButton(
+                                    child: Text("(", style: signButtonTextStyle),
+                                    color: signButtonBgColor,
+                                    disabledColor: signButtonBgColor,
+                                    shape: buttonBorderShape,
                                 ),
                             ),
                             Expanded(
-                                child: OutlineButton (
-                                    child: Text(")", style: signButtonStyle)
+                                child: RaisedButton(
+                                    child: Text(")", style: signButtonTextStyle),
+                                    color: signButtonBgColor,
+                                    disabledColor: signButtonBgColor,
+                                    shape: buttonBorderShape,
                                 ),
                             )
                         ],
@@ -125,26 +143,34 @@ class _SimpleCalculatorState extends State<SimpleCalculator> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: <Widget>[
                             Expanded(
-                                child: OutlineButton (
-                                    child: Text("CE", style: numberButtonStyle),
+                                child: RaisedButton (
+                                    child: Text("CE", style: numberButtonTextStyle),
+                                    shape: buttonBorderShape,
+                                    color: numberButtonBgColor,
                                     onPressed: () => clearScreen("CE"),
                                 ),
                             ),
                             Expanded(
-                                child: OutlineButton (
-                                    child: Text("C", style: numberButtonStyle),
+                                child: RaisedButton (
+                                    child: Text("C", style: numberButtonTextStyle),
+                                    shape: buttonBorderShape,
+                                    color: numberButtonBgColor,
                                     onPressed: () => clearScreen("C"),
                                 ),
                             ),
                             Expanded(
-                                child: OutlineButton (
+                                child: RaisedButton (
                                     child: Icon(Icons.backspace),
+                                    shape: buttonBorderShape,
+                                    color: numberButtonBgColor,
                                     onPressed: () => backSpaceClicked(),
                                 ),
                             ),
                             Expanded(
-                                child: OutlineButton (
-                                    child: Text("÷", style: signButtonStyle),
+                                child: RaisedButton(
+                                    child: Text("÷", style: signButtonTextStyle),
+                                    color: signButtonBgColor,
+                                    shape: buttonBorderShape,
                                     onPressed: () {
                                         signClicked("÷");
                                         currentSign = Sign.Division;
@@ -159,26 +185,34 @@ class _SimpleCalculatorState extends State<SimpleCalculator> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: <Widget>[
                             Expanded(
-                                child: OutlineButton (
-                                    child: Text("7", style: numberButtonStyle),
+                                child: RaisedButton (
+                                    child: Text("7", style: numberButtonTextStyle),
+                                    shape: buttonBorderShape,
+                                    color: numberButtonBgColor,
                                     onPressed: () => numberClicked("7"),
                                 ),
                             ),
                             Expanded(
-                                child: OutlineButton (
-                                    child: Text("8", style: numberButtonStyle),
+                                child: RaisedButton (
+                                    child: Text("8", style: numberButtonTextStyle),
+                                    shape: buttonBorderShape,
+                                    color: numberButtonBgColor,
                                     onPressed: () => numberClicked("8"),
                                 ),
                             ),
                             Expanded(
-                                child: OutlineButton (
-                                    child: Text("9", style: numberButtonStyle),
+                                child: RaisedButton (
+                                    child: Text("9", style: numberButtonTextStyle),
+                                    shape: buttonBorderShape,
+                                    color: numberButtonBgColor,
                                     onPressed: () => numberClicked("9"),
                                 ),
                             ),
                             Expanded(
-                                child: OutlineButton (
-                                    child: Text("×", style: signButtonStyle),
+                                child: RaisedButton (
+                                    child: Text("×", style: signButtonTextStyle),
+                                    color: signButtonBgColor,
+                                    shape: buttonBorderShape,
                                     onPressed: () {
                                         signClicked("×");
                                         currentSign = Sign.Multiplication;
@@ -193,26 +227,34 @@ class _SimpleCalculatorState extends State<SimpleCalculator> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: <Widget>[
                             Expanded(
-                                child: OutlineButton (
-                                    child: Text("4", style: numberButtonStyle),
+                                child: RaisedButton (
+                                    child: Text("4", style: numberButtonTextStyle),
+                                    shape: buttonBorderShape,
+                                    color: numberButtonBgColor,
                                     onPressed: () => numberClicked("4"),
                                 ),
                             ),
                             Expanded(
-                                child: OutlineButton (
-                                    child: Text("5", style: numberButtonStyle),
+                                child: RaisedButton (
+                                    child: Text("5", style: numberButtonTextStyle),
+                                    shape: buttonBorderShape,
+                                    color: numberButtonBgColor,
                                     onPressed: () => numberClicked("5"),
                                 ),
                             ),
                             Expanded(
-                                child: OutlineButton (
-                                    child: Text("6", style: numberButtonStyle),
+                                child: RaisedButton (
+                                    child: Text("6", style: numberButtonTextStyle),
+                                    color: numberButtonBgColor,
+                                    shape: buttonBorderShape,
                                     onPressed: () => numberClicked("6"),
                                 ),
                             ),
                             Expanded(
-                                child: OutlineButton (
-                                    child: Text("−", style: signButtonStyle),
+                                child: RaisedButton (
+                                    child: Text("−", style: signButtonTextStyle),
+                                    color: signButtonBgColor,
+                                    shape: buttonBorderShape,
                                     onPressed: () {
                                         signClicked("−");
                                         currentSign = Sign.Subtraction;
@@ -227,26 +269,34 @@ class _SimpleCalculatorState extends State<SimpleCalculator> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: <Widget>[
                             Expanded(
-                                child: OutlineButton (
-                                    child: Text("1", style: numberButtonStyle),
+                                child: RaisedButton (
+                                    child: Text("1", style: numberButtonTextStyle),
+                                    color: numberButtonBgColor,
                                     onPressed: () => numberClicked("1"),
+                                    shape: buttonBorderShape,
                                 ),
                             ),
                             Expanded(
-                                child: OutlineButton (
-                                    child: Text("2", style: numberButtonStyle),
+                                child: RaisedButton (
+                                    child: Text("2", style: numberButtonTextStyle),
+                                    color: numberButtonBgColor,
                                     onPressed: () => numberClicked("2"),
+                                    shape: buttonBorderShape,
                                 ),
                             ),
                             Expanded(
-                                child: OutlineButton (
-                                    child: Text("3", style: numberButtonStyle),
+                                child: RaisedButton (
+                                    child: Text("3", style: numberButtonTextStyle),
+                                    color: numberButtonBgColor,
                                     onPressed: () => numberClicked("3"),
+                                    shape: buttonBorderShape,
                                 ),
                             ),
                             Expanded(
-                                child: OutlineButton (
-                                    child: Text("+", style: signButtonStyle),
+                                child: RaisedButton (
+                                    child: Text("+", style: signButtonTextStyle),
+                                    color: signButtonBgColor,
+                                    shape: buttonBorderShape,
                                     onPressed: () {
                                         signClicked("+");
                                         currentSign = Sign.Addition;
@@ -261,20 +311,26 @@ class _SimpleCalculatorState extends State<SimpleCalculator> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: <Widget>[
                             Expanded(
-                                child: OutlineButton (
-                                    child: Text("±", style: signButtonStyle),
+                                child: RaisedButton (
+                                    child: Text("±", style: signButtonTextStyle),
+                                    color: numberButtonBgColor,
+                                    shape: buttonBorderShape,
                                     onPressed: () => plusOrMinusClicked(),
                                 ),
                             ),
                             Expanded(
-                                child: OutlineButton (
-                                    child: Text("0", style: numberButtonStyle),
+                                child: RaisedButton (
+                                    child: Text("0", style: numberButtonTextStyle),
+                                    color: numberButtonBgColor,
+                                    shape: buttonBorderShape,
                                     onPressed: () => numberClicked("0"),
                                 ),
                             ),
                             Expanded(
-                                child: OutlineButton (
-                                    child: Text(".", style: signButtonStyle),
+                                child: RaisedButton (
+                                    child: Text(".", style: signButtonTextStyle),
+                                    color: numberButtonBgColor,
+                                    shape: buttonBorderShape,
                                     onPressed: () {
                                         if (!screenTextController.text.contains(".")) {
                                             numberClicked(".");
@@ -283,9 +339,11 @@ class _SimpleCalculatorState extends State<SimpleCalculator> {
                                 ),
                             ),
                             Expanded(
-                                child: OutlineButton (
-                                    child: Text("=", style: signButtonStyle),
+                                child: RaisedButton (
+                                    child: Text("=", style: signButtonTextStyle),
                                     onPressed: () => equalSignClicked(),
+                                    color: signButtonBgColor,
+                                    shape: buttonBorderShape,
                                 ),
                             )
                         ],
@@ -321,7 +379,7 @@ class _SimpleCalculatorState extends State<SimpleCalculator> {
         double currentNumber = double.parse(screenTextController.text);
         setState(() {
             previousTotal = getCurrentResult(currentNumber);
-            screenTextController.text = previousTotal.toString();
+            screenTextController.text = removeTrailingZero(previousTotal);
             history = "";
             isScreenPreviousTotal = true;
             currentSign = Sign.None;
@@ -335,7 +393,7 @@ class _SimpleCalculatorState extends State<SimpleCalculator> {
             setState(() {
                 history += " √${screenTextController.text}";
                 previousTotal = getCurrentResult(sqrt(currentNumber), isSquareRoot: true);
-                screenTextController.text = previousTotal.toString();
+                screenTextController.text = removeTrailingZero(previousTotal);
                 currentSign = Sign.None;
                 isScreenSquareRoot = true;
                 isScreenPreviousTotal = true;
@@ -399,7 +457,7 @@ class _SimpleCalculatorState extends State<SimpleCalculator> {
                         }
 
                         previousTotal = getCurrentResult(currentNumber);
-                        screenTextController.text = previousTotal.toString();
+                        screenTextController.text = removeTrailingZero(previousTotal);
                         isScreenPreviousTotal = true;
                     }
                 });
@@ -428,6 +486,10 @@ class _SimpleCalculatorState extends State<SimpleCalculator> {
             default:
                 return 0.0;
         }
+    }
+
+    String removeTrailingZero(double number) {
+        return number.toStringAsFixed(number.truncateToDouble() == number ? 0 : 1);
     }
 
     void plusOrMinusClicked() {
